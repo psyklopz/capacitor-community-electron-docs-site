@@ -31,4 +31,4 @@ createCapacitorElectronDeepinking(myCapacitorApp, {...});
 | Key              | Default | Required | Description                                                                                                                    |
 | ---------------- | ------- | -------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | customProtocol   | -       | Yes      | The protocol that you want the app to use. For example: 'superapp' will get use as `superapp://testdata`                       |
-| customHandler    | _null_  | No       | A custom function that takes 1 parameter that will run in the context of electron and not the web app.                         |
+| customHandler    | _null_  | No       | A custom function that takes 1 parameter `(url: string) => void` that will run in the context of electron and not the web app.                         |
