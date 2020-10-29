@@ -4,8 +4,8 @@ title: Create a Capacitor Electron Plugin
 
 1. Generate plugin starter with `npx @capacitor/cli plugin:generate`.
 2. Run `npm i -D rollup rollup-plugin-node-resolve electron @types/node@^12.0.0 tslib@^1.13.0` in the new project directory created by the CLI.
-3. Create a `electron` folder in the root of the new project directory created by the CLI.
-4. Create a `tsconfig.json` file containing the below in the `electron` folder.
+3. Create an `electron` folder in the root of the new project directory created by the CLI.
+4. Create a `tsconfig.json` file in the new `electron` folder, containing:
    ```json
    {
      "compilerOptions": {
@@ -27,7 +27,7 @@ title: Create a Capacitor Electron Plugin
      "files": ["src/index.ts"]
    }
    ```
-5. Create a `rollup.config.js` file containing the below `electron` folder.
+5. Create a `rollup.config.js` file in the new `electron` folder, containing:
    ```javascript
    import nodeResolve from "rollup-plugin-node-resolve";
    export default {
@@ -51,7 +51,7 @@ title: Create a Capacitor Electron Plugin
    ```typescript
    export * from "../../src/definitions";
    ```
-9. Create a `plugin.ts` file in the new `src` folder, containing:
+9. Create a `plugin.ts` file in the new `src` folder, containing the following.  Be sure to replace `AwesomeElectronPlugin` with the name you chose when you generated the plugin.
 
    ```typescript
    import { WebPlugin } from "@capacitor/core";
@@ -59,7 +59,7 @@ title: Create a Capacitor Electron Plugin
    const { remote } = require("electron");
 
    export class AwesomeElectronPluginWeb extends WebPlugin
-     implements AwesomeElectornPluginPlugin {
+     implements AwesomeElectronPluginPlugin {
      Path: any = null;
      NodeFs: any = null;
      RemoteRef: any = null;
@@ -90,21 +90,26 @@ title: Create a Capacitor Electron Plugin
    registerWebPlugin(AwesomeElectronPlugin);
    ```
 
-10. Edit the `package.json` in the root folder, add the below to the `capacitor` object:
+10. Edit the `package.json` file in the root folder and add the following to the `capacitor` object.  Remove the `android` and `ios` sections from the `capacitor` object if you don't intend to add native functionality for those platforms within this plugin.
     ```json
     "electron": {
       "src": "electron/dist/plugin.js"
     }
     ```
-11. Edit the `package.json` in the root folder `scripts` object to reflect the below:
+11. Edit the `package.json` file in the root folder, modify the `scripts` object to add the following:
     ```json
     "scripts": {
       ...,
       "build-electron": "rimraf ./electron/dist && cd ./electron && tsc && rollup --config rollup.config.js"
     }
     ```
-12. Edit the `"files": [...]` in the root `package.json`, add `"electron/"` to the list.
+12. Edit the `"files": [...]` array in the root `package.json`, add `"electron/"` to the list.
 13. Create your plugin in `plugin.ts`.
 14. Run `npm run build-electron` to compile the plugin.
-15. Release it to NPM then use in your capacitor apps as any other native plugin like android or ios.
+15. Release it to NPM then use in your capacitor apps as any other native plugin like android or ios.  (Or, while in development, use `npm link`. See https://docs.npmjs.com/cli/v6/commands/npm-link)
+16. Within the Electron project that will use this plugin, use `npm install` to add your plugin.  Remember to update the `preloader.js` file with the path to your plugin:
+    ``` javascript
+    require('./node_modules/@capacitor-community/electron/dist/electron-bridge.js');
+    require('./node_modules/awesome-electron-plugin/electron/dist/plugin');
+    ```
 
